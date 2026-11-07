@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>온라인 명함 | Interactive 3D Glass Card</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Pretendard:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <!-- 배경 오로라 & 플로팅 3D 오브젝트 -->
+  <div class="bg-canvas">
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+    <div class="grid-overlay"></div>
+    <canvas id="particleCanvas"></canvas>
+  </div>
+
+  <!-- 상단 컨트롤 바 -->
+  <header class="top-bar">
+    <div class="brand-badge">
+      <span class="pulse-dot"></span>
+      <span id="badgeText">DIGITAL ID CARD</span>
+    </div>
+    <div class="top-actions">
+      <button class="glass-pill-btn" id="themeBtn" title="테마 색상 변경">
+        🎨 테마 전환
+      </button>
+      <button class="glass-pill-btn primary-pill" id="editToggleBtn">
+        ✏️ 내 정보 수정
+      </button>
+    </div>
+  </header>
+
+  <!-- 메인 3D 카드 스테이지 -->
+  <main class="stage">
+    <div class="card-scene" id="cardScene">
+      <div class="card-flipper" id="cardFlipper">
+        
+        <!-- ================= 앞면 (FRONT) ================= -->
+        <section class="glass-card card-front" id="cardFront">
+          <!-- 홀로그램 광원 레이어 -->
+          <div class="glare-layer" id="glareFront"></div>
+          <div class="holo-border"></div>
+
+          <!-- 카드 상단 헤더 -->
+          <div class="card-header">
+            <span class="status-chip">
+              <span class="status-indicator"></span>
+              <span id="viewStatus">OPEN TO CONNECT</span>
+            </span>
+            <button class="flip-btn" id="flipToBackBtn" title="뒷면(상세 전적/이력) 보기">
+              <span>전적 · 이력 상세</span>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M17 1l4 4-4 4"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><path d="M7 23l-4-4 4-4"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/>
+              </svg>
+            </button>
+          </div>
+
+          <!-- 프로필 영역 (이름, 직함, 소재) -->
+          <div class="profile-hero">
+            <div class="avatar-wrapper" id="avatarTrigger" title="클릭하여 프로필 이미지 변경">
+              <div class="avatar-ring"></div>
+              <img id="viewAvatar" src="https://api.dicebear.com/9.x/notionists/svg?seed=Joon&backgroundColor=b6e3f4,c0aede,d1d4f9" alt="프로필 이미지" class="avatar-img" />
+              <div class="avatar-edit-hint">📷 변경</div>
+              <input type="file" id="avatarInput" accept="image/*" hidden />
+            </div>
+
+            <div class="profile-identity">
+              <div class="name-row">
+                <h1 class="user-name" id="viewName">홍길동 (Joon)</h1>
+                <span class="verified-badge" title="Verified Profile">✓</span>
+              </div>
+              <p class="user-role" id="viewRole">Creative Developer & Strategist</p>
+              
+              <!-- 소재지 & 소속 -->
+              <div class="meta-tags">
+                <span class="meta-tag">
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                  <span id="viewLocation">서울특별시 강남구</span>
+                </span>
+                <span class="meta-tag">
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
+                  <span id="viewOrg">Team Nexus / 대표</span>
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <!-- 한 줄 소개 -->
+          <p class="bio-text" id="viewBio">
+            새로운 아이디어와 인터랙티브한 디지털 경험을 설계합니다. 압도적인 몰입감과 결과로 증명합니다.
+          </p>
+
+          <!-- 핵심 전적 / 스탯 하이라이트 (3단 그리드) -->
+          <div class="stats-grid">
+            <div class="stat-box">
+              <span class="stat-value" id="viewStat1Val">128+</span>
+              <span class="stat-label" id="viewStat1Label">누적 프로젝트/전적</span>
+            </div>
+            <div class="stat-box">
+              <span class="stat-value" id="viewStat2Val">94.2%</span>
+              <span class="stat-label" id="viewStat2Label">달성률 / 승률</span>
+            </div>
+            <div class="stat-box">
+              <span class="stat-value" id="viewStat3Val">TOP 1%</span>
+              <span class="stat-label" id="viewStat3Label">랭킹 / 티어</span>
+            </div>
+          </div>
+
+          <!-- 연락처 퀵 리스트 -->
+          <div class="contact-list">
+            <button class="contact-item" id="copyPhoneBtn" data-copy="">
+              <div class="contact-icon">📱</div>
+              <div class="contact-detail">
+                <span class="contact-type">Mobile</span>
+                <span class="contact-val" id="viewPhone">010-1234-5678</span>
+              </div>
+              <span class="copy-chip">복사</span>
+            </button>
+
+            <button class="contact-item" id="copyEmailBtn" data-copy="">
+              <div class="contact-icon">✉️</div>
+              <div class="contact-detail">
+                <span class="contact-type">Email</span>
+                <span class="contact-val" id="viewEmail">hello@example.com</span>
+              </div>
+              <span class="copy-chip">복사</span>
+            </button>
+          </div>
+
+          <!-- 하단 소셜 & 액션 버튼 -->
+          <div class="card-footer">
+            <div class="social-links" id="socialLinksContainer">
+              <!-- JS에서 동적 렌더링 -->
+            </div>
+            <div class="footer-cta">
+              <button class="action-btn secondary-btn" id="qrOpenBtn" title="QR 코드로 명함 공유">
+                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+                <span>QR</span>
+              </button>
+              <button class="action-btn primary-btn" id="saveVcardBtn">
+                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+                <span>연락처 저장</span>
+              </button>
+            </div>
+          </div>
+        </section>
+
+        <!-- ================= 뒷면 (BACK: 전적 & 주요 이력) ================= -->
+        <section class="glass-card card-back" id="cardBack">
+          <div class="glare-layer" id="glareBack"></div>
+          <div class="holo-border"></div>
+
+          <div class="card-header">
+            <h2 class="back-title">🏆 주요 전적 & 히스토리</h2>
+            <button class="flip-btn" id="flipToFrontBtn">
+              <span>앞면으로</span>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M17 1l4 4-4 4"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><path d="M7 23l-4-4 4-4"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/>
+              </svg>
+            </button>
+          </div>
+
+          <!-- 전적/이력 타임라인 -->
+          <div class="records-section">
+            <div class="timeline" id="recordsTimeline">
+              <!-- JS에서 동적 렌더링 -->
+            </div>
+          </div>
+
+          <!-- 보유 전문 태그 / 주력 스킬 -->
+          <div class="skills-section">
+            <h3 class="sub-heading">⚡ 핵심 역량 · 주력 분야</h3>
+            <div class="skill-chips" id="skillsContainer">
+              <!-- JS에서 동적 렌더링 -->
+            </div>
+          </div>
+
+          <!-- 뒷면 하단 명함 공유 버튼 -->
+          <div class="back-footer">
+            <button class="action-btn full-width-btn" id="shareCardBtn">
+              🔗 내 온라인 명함 링크 공유하기
+            </button>
+          </div>
+        </section>
+
+      </div>
+    </div>
+
+    <!-- 하단 인터랙션 힌트 -->
+    <div class="interaction-hint">
+      <span>✨ 마우스를 움직여 3D 홀로그램 효과를 확인하거나 카드를 뒤집어 전적을 확인해 보세요</span>
+    </div>
+  </main>
+
+  <!-- ================= 내 정보 편집 드로어 (모달) ================= -->
+  <aside class="editor-drawer" id="editorDrawer" aria-hidden="true">
+    <div class="drawer-header">
+      <h3>✏️ 내 명함 정보 커스터마이징</h3>
+      <button class="icon-close-btn" id="closeEditorBtn">✕</button>
+    </div>
+    <p class="drawer-desc">수정 사항은 실시간으로 반영되며 브라우저에 자동 저장됩니다.</p>
+
+    <form id="cardEditForm" class="editor-form">
+      <div class="form-group">
+        <label>이름 / 닉네임</label>
+        <input type="text" id="inputName" placeholder="홍길동 (Joon)" />
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label>직함 / 타이틀</label>
+          <input type="text" id="inputRole" placeholder="Creative Developer" />
+        </div>
+        <div class="form-group">
+          <label>상태 배지</label>
+          <input type="text" id="inputStatus" placeholder="OPEN TO CONNECT" />
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label>소재지 (지역/위치)</label>
+          <input type="text" id="inputLocation" placeholder="서울특별시 강남구" />
+        </div>
+        <div class="form-group">
+          <label>소속 / 팀 / 회사</label>
+          <input type="text" id="inputOrg" placeholder="Team Nexus / 대표" />
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>한 줄 소개</label>
+        <textarea id="inputBio" rows="2" placeholder="자신을 표현하는 한 줄 소개"></textarea>
+      </div>
+
+      <div class="form-divider">📊 핵심 전적 스탯 (3가지)</div>
+      <div class="form-row-3">
+        <div class="form-group">
+          <label>스탯 1 (수치 / 이름)</label>
+          <input type="text" id="inputStat1Val" placeholder="128+" />
+          <input type="text" id="inputStat1Label" placeholder="누적 전적" />
+        </div>
+        <div class="form-group">
+          <label>스탯 2 (수치 / 이름)</label>
+          <input type="text" id="inputStat2Val" placeholder="94.2%" />
+          <input type="text" id="inputStat2Label" placeholder="승률/달성률" />
+        </div>
+        <div class="form-group">
+          <label>스탯 3 (수치 / 이름)</label>
+          <input type="text" id="inputStat3Val" placeholder="TOP 1%" />
+          <input type="text" id="inputStat3Label" placeholder="최고 티어" />
+        </div>
+      </div>
+
+      <div class="form-divider">🏆 상세 전적 / 이력 (줄바꿈으로 구분, `연도/구분 | 제목 | 설명` 형식)</div>
+      <div class="form-group">
+        <textarea id="inputRecords" rows="4" placeholder="2026 | 시즌 챔피언십 우승 | 개인 및 팀 통합 1위 달성&#10;2025 | 메인 프로젝트 총괄 디렉팅 | 누적 사용자 50만 돌파"></textarea>
+      </div>
+
+      <div class="form-group">
+        <label>⚡ 주력 분야 / 스킬 태그 (쉼표 `,`로 구분)</label>
+        <input type="text" id="inputSkills" placeholder="전략 기획, 풀스택 개발, UI/UX, 리더십" />
+      </div>
+
+      <div class="form-divider">📞 연락처 & 소셜 링크</div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>전화번호</label>
+          <input type="text" id="inputPhone" placeholder="010-1234-5678" />
+        </div>
+        <div class="form-group">
+          <label>이메일</label>
+          <input type="email" id="inputEmail" placeholder="hello@example.com" />
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label>Instagram / SNS URL</label>
+          <input type="url" id="inputInstagram" placeholder="https://instagram.com/..." />
+        </div>
+        <div class="form-group">
+          <label>GitHub / 포트폴리오 URL</label>
+          <input type="url" id="inputGithub" placeholder="https://github.com/..." />
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label>오픈카톡 / 디스코드 / 블로그 URL</label>
+          <input type="url" id="inputBlog" placeholder="https://..." />
+        </div>
+        <div class="form-group">
+          <label>YouTube / 기타 링크 URL</label>
+          <input type="url" id="inputYoutube" placeholder="https://..." />
+        </div>
+      </div>
+
+      <div class="drawer-actions">
+        <button type="button" class="action-btn secondary-btn" id="resetDefaultBtn">초기화</button>
+        <button type="submit" class="action-btn primary-btn">저장 완료</button>
+      </div>
+    </form>
+  </aside>
+
+  <!-- ================= QR 코드 모달 ================= -->
+  <div class="modal-backdrop" id="qrModal" aria-hidden="true">
+    <div class="qr-dialog">
+      <div class="qr-header">
+        <h3>📱 모바일 QR 스캔</h3>
+        <button class="icon-close-btn" id="closeQrBtn">✕</button>
+      </div>
+      <div class="qr-box">
+        <img id="qrImage" src="" alt="QR Code" />
+      </div>
+      <p class="qr-caption" id="qrCaption">카메라로 스캔하면 내 명함 페이지로 연결됩니다.</p>
+    </div>
+  </div>
+
+  <!-- 토스트 알림 -->
+  <div class="toast" id="toast">복사되었습니다!</div>
+
+  <script src="script.js"></script>
+</body>
+</html>
