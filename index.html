@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+  <title>JOON — Interactive Online Identity & Achievement Specimen</title>
+  <meta name="description" content="학생 발명가 겸 AI 메이커 JOON의 인터랙티브 온라인 명함 & 16개 대회 출전 전적 아카이브 (2024–2026)">
+  <meta name="theme-color" content="#040407">
+  
+  <!-- Open Graph -->
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="JOON — Interactive Online Card">
+  <meta property="og:description" content="학생 발명가 겸 AI 메이커 JOON · 백현중학교 · 16개 대회 출전 전적">
+  <meta property="og:site_name" content="JOON Online Specimen">
+  
+  <!-- Typography Preconnect -->
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css">
+  
+  <!-- Design System Stylesheet -->
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Ambient HTML5 Constellation Canvas -->
+  <canvas id="ambientCanvas" aria-hidden="true"></canvas>
+
+  <!-- Top Navigation Bar -->
+  <header class="nav-bar">
+    <a href="#" class="nav-brand" aria-label="JOON 2026 Edition">
+      <span class="nav-brand-dot"></span>
+      <span class="nav-brand-text">JOON // 2026 EDITION</span>
+    </a>
+    <div class="nav-actions">
+      <button class="btn-pill" id="shareCardBtn" aria-label="명함 공유 링크 복사">
+        <span>🔗</span>
+        <span>공유 링크</span>
+      </button>
+      <button class="btn-pill btn-pill-primary" id="navEmailBtn" aria-label="이메일 복사">
+        <span>✉️</span>
+        <span>realjoon.ai@gmail.com</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- Dual-Zone Macro Layout -->
+  <main class="app-container">
+
+    <!-- Zone A: 3D Specimen Card Stage -->
+    <section class="card-stage" aria-label="JOON 3D 명함">
+      <div class="specimen-card-wrapper" id="heroCardWrapper">
+        <article class="hero-card" id="heroCard" tabindex="0" role="region" aria-label="JOON 인터랙티브 3D 명함">
+          <!-- Specular Glare Sheen Overlay -->
+          <div class="card-sheen" id="cardSheen" aria-hidden="true"></div>
+
+          <!-- Card Content Layer -->
+          <div class="card-content">
+            <!-- Card Top: Holographic Chip & Edition -->
+            <div class="card-top">
+              <div class="chip-container">
+                <div class="card-chip" aria-hidden="true"></div>
+                <span class="card-role" id="heroRole">INVENTOR · AI MAKER</span>
+              </div>
+              <span class="card-edition">2024–2026</span>
+            </div>
+
+            <!-- Card Center: Monogram & Affiliation -->
+            <div class="card-center">
+              <h1 class="card-name" id="heroName">JOON</h1>
+              <p class="card-affiliation" id="heroAffiliation">백현중학교 · 성남</p>
+            </div>
+
+            <!-- Card Bottom: One-Click Email Button -->
+            <div class="card-bottom">
+              <button class="card-email-btn" id="emailBtn" aria-label="이메일 복사하기">
+                <span class="email-icon" id="emailIcon" aria-hidden="true">✉️</span>
+                <span id="heroEmailText">realjoon.ai@gmail.com</span>
+                <span class="badge-count" style="margin-left: 2px;">복사</span>
+              </button>
+            </div>
+          </div>
+        </article>
+      </div>
+
+      <!-- Quick Metrics Highlight Pill -->
+      <div class="metrics-card" role="region" aria-label="핵심 성과 요약">
+        <div class="metric-item">
+          <span class="metric-num" id="statTotal">16</span>
+          <span class="metric-label">총 대회 출전</span>
+        </div>
+        <div class="metric-item">
+          <span class="metric-num" id="statAwards">10</span>
+          <span class="metric-label">수상 · 합격</span>
+        </div>
+        <div class="metric-item">
+          <span class="metric-num" id="statChallenges">6</span>
+          <span class="metric-label">도전 · 출품</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Zone B: Curated Bento Achievements Matrix -->
+    <section class="matrix-stage" aria-label="대회 출전 전적 아카이브">
+      <div class="matrix-header">
+        <div class="matrix-title-group">
+          <h2 class="matrix-title">ACHIEVEMENTS ARCHIVE</h2>
+          <p class="matrix-subtitle">2024–2026 혁신 대회 및 발명 전적 (총 16건)</p>
+        </div>
+
+        <!-- Apple Segmented Filter Tabs -->
+        <nav class="filter-segments" id="filterTabs" aria-label="전적 필터">
+          <button class="filter-tab active" data-filter="all" aria-pressed="true">
+            전체 <span class="badge-count">16</span>
+          </button>
+          <button class="filter-tab" data-filter="award" aria-pressed="false">
+            주요 수상 <span class="badge-count">6</span>
+          </button>
+          <button class="filter-tab" data-filter="qualifier" aria-pressed="false">
+            본선·합격 <span class="badge-count">4</span>
+          </button>
+          <button class="filter-tab" data-filter="challenge" aria-pressed="false">
+            도전·성장 <span class="badge-count">6</span>
+          </button>
+        </nav>
+      </div>
+
+      <!-- Bento Grid Container for 16 Records -->
+      <div class="bento-grid" id="recordsGrid" role="list" aria-live="polite"></div>
+    </section>
+
+  </main>
+
+  <!-- Floating Apple Toast Notification -->
+  <aside class="toast" id="toast" role="status" aria-live="polite">
+    <span class="toast-icon" id="toastIcon">✓</span>
+    <span class="toast-message" id="toastMessage">복사되었습니다.</span>
+  </aside>
+
+  <!-- Footer -->
+  <footer class="app-footer">
+    <div class="footer-text">
+      © 2024–2026 JOON. Baekhyun Middle School · Seongnam. All rights reserved.
+    </div>
+    <div class="footer-links">
+      <a href="mailto:realjoon.ai@gmail.com" class="footer-link">Direct Mail</a>
+    </div>
+  </footer>
+
+  <!-- Application Engine -->
+  <script src="script.js"></script>
+</body>
+</html>
